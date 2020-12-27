@@ -9,3 +9,10 @@ This is a weather web app that is powered by DarkSky API, AWS Lambda, AWS API Ga
 ## Functionality
 * The React app should use the browser location services to then request weather data from the API GW and Lambda function. 
 * We will focus on providing today's temperature and precipitation, and provide a clothing recommendation.   
+
+## Infrastructure
+The deployment process should be self-managing, as much as possible. 
+* Some questions. 
+    * On deploy, create S3 bucket. 
+    * Get S3 bucket static URL and output it. 
+    * Make sure that the react project can automatically be updated with the API Gateway URL

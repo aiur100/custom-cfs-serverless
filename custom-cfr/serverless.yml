@@ -1,0 +1,28 @@
+service: voice-foundry-custom-4
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+# you can overwrite defaults here
+  stage: dev
+  region: us-east-1
+
+functions:
+  testCustomResource:
+    handler: handler.testCustomResource
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    TestCustomResource:
+      Type: Custom::TestCustomResource
+      Properties:
+        ServiceToken:
+          Fn::GetAtt:
+            - TestCustomResourceLambdaFunction # the logical ID in CF stack, which is the capitalized function name in serverless.yml + 'LambdaFunction'
+            - Arn
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"

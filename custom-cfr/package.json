@@ -8,5 +8,12 @@
   },
   "keywords": [],
   "author": "Christopher R. Hill",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-s3-sync": "^1.15.0"
+  },
+  "dependencies": {
+    "cfn-response": "^1.0.1",
+    "node-fetch": "^2.6.1"
+  }
 }
