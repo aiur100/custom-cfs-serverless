@@ -4,25 +4,22 @@ frameworkVersion: '2'
 provider:
   name: aws
   runtime: nodejs12.x
-# you can overwrite defaults here
   stage: dev
   region: us-east-1
 
 functions:
-  testCustomResource:
-    handler: handler.testCustomResource
+  deployProject:
+    handler: lambdas/deployProject.handler
+  weatherApi:
+    handler: lambdas/weatherApi.handler
 
-# you can add CloudFormation resource templates here
 resources:
   Resources:
-    TestCustomResource:
-      Type: Custom::TestCustomResource
+    #This CF Custom Resource Deploys the entire project
+    DeployProjectResource:
+      Type: Custom::DeployProjectResource
       Properties:
         ServiceToken:
           Fn::GetAtt:
-            - TestCustomResourceLambdaFunction # the logical ID in CF stack, which is the capitalized function name in serverless.yml + 'LambdaFunction'
+            - DeployProjectLambdaFunction # the logical ID in CF stack, which is the capitalized function name in serverless.yml + 'LambdaFunction'
             - Arn
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"

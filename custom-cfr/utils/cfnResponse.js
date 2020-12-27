@@ -1,6 +1,20 @@
+/**
+ * This is a Promise based (async await) 
+ * version of what AWS has as the cfn_response 
+ * module
+ * */
+
 const SUCCESS = "SUCCESS";
 const FAILED = "FAILED";
  
+/**
+ * 
+ * @param {*} event 
+ * @param {*} context 
+ * @param {*} responseStatus 
+ * @param {*} responseData 
+ * @param {*} physicalResourceId 
+ */
  async function asyncResponse(event, context, responseStatus, responseData, physicalResourceId) {
     const responseBody = JSON.stringify({
         Status: responseStatus,
