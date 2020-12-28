@@ -1,10 +1,9 @@
-async function createApiGateway(AWS){
+async function createApiGateway(AWS,lambdaArn){
 
     AWS.config.region = 'us-east-1';
 
     const apig = new AWS.APIGateway({
-        apiVersion: '2015/07/09',
-        profile: 'pasley_hill'
+        apiVersion: '2015/07/09'
     });
 
     const params = {
@@ -36,10 +35,34 @@ async function createApiGateway(AWS){
         restApiId: restResponse.id,
         resourceId: parent.id,
         httpMethod: 'GET',
-        authorizationType: 'NONE'
+        authorizationType: 'NONE',
+        requestParameters: {
+            "method.request.querystring.long" : false,
+            "method.request.querystring.lat" : false,
+        }
     }).promise();
 
     console.log(methodResponse);
+
+    const putMethodR = await apig.putMethodResponse({
+        restApiId: restResponse.id,
+        resourceId: parent.id,
+        httpMethod: 'GET',
+        statusCode: 200
+    }).promise();
+
+    console.log(putMethodR);
+
+    const putIntegration = await apig.putIntegration({
+        estApiId: restResponse.id,
+        resourceId: parent.id,
+        httpMethod: 'GET',
+        type: "AWS",
+        integrationHttpMethod: "POST",
+    })
+
+
+    {"application/json":"{\"greeter\":\"$input.params('greeter')\"}"}
 
     //return response;
 }
