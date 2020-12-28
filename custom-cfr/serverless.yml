@@ -1,4 +1,4 @@
-service: weather
+service: weather-3
 frameworkVersion: '2'
 
 custom: 
@@ -26,5 +26,30 @@ resources:
       Properties:
         ServiceToken:
           Fn::GetAtt:
-            - DeployProjectLambdaFunction # the logical ID in CF stack, which is the capitalized function name in serverless.yml + 'LambdaFunction'
+            - DeployProjectLambdaFunction 
             - Arn
+    ApiInvokeFunctionPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "lambda:InvokeFunction"
+              Resource:
+                - "*"
+    ApigAwsProxyRole:
+      Type: AWS::IAM::Role
+      Description: "Used to give the API GW access to a Lambda Function"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: 
+                - "sts:AssumeRole"
+              Principal:
+                Service: "apigateway.amazonaws.com"
+        ManagedPolicyArns:
+          - !Ref ApiInvokeFunctionPolicy
