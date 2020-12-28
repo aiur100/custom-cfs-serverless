@@ -8,7 +8,6 @@ async function createApiGateway(apiConfig){
     } = apiConfig; 
 
     AWS.config.region = 'us-east-1';
-
     const apig = new AWS.APIGateway({
         apiVersion: '2015/07/09'
     });
@@ -32,7 +31,7 @@ async function createApiGateway(apiConfig){
         parentId: parent.id,
         pathPart: '{proxy+}'
     }).promise();
-    
+
     console.log(resourceCreate);
 
     const methodResponse = await apig.putMethod({
@@ -43,17 +42,6 @@ async function createApiGateway(apiConfig){
     }).promise();
 
     console.log(methodResponse);
-
-    /*
-    const putMethodR = await apig.putMethodResponse({
-        restApiId: restResponse.id,
-        resourceId: resourceCreate.id,
-        httpMethod: 'ANY',
-        statusCode: "200"
-    }).promise();
-
-    console.log(putMethodR);
-    */
 
     const putIntegration = await apig.putIntegration({
         restApiId: restResponse.id,
@@ -67,39 +55,16 @@ async function createApiGateway(apiConfig){
 
     console.log(putIntegration);
 
-    /*
-    const putIntegrationResponse = await apig.putIntegrationResponse({
-        restApiId: restResponse.id,
-        resourceId: resourceCreate.id,
-        httpMethod: 'GET',
-        statusCode: "200",
-        selectionPattern: ""
-    }).promise();
-
-    console.log(putIntegrationResponse);
-    
-
-    const putIntErroResponse = await apig.putIntegrationResponse({
-        restApiId: restResponse.id,
-        resourceId: resourceCreate.id,
-        httpMethod: 'GET',
-        statusCode: "500",
-        selectionPattern: ""
-    }).promise();
-
-    console.log(putIntegrationResponse);
-    */
-
     const deploymentResponse = await apig.createDeployment({
         restApiId: restResponse.id,
         stageName: stage
     }).promise();
 
     console.log(deploymentResponse);
-    //return response;
 }
 
 async function doesApiAlreadyExists(name,AWS){
+    AWS.config.region = 'us-east-1';
     const apig = new AWS.APIGateway({
 		apiVersion: '2015/07/09'
     });
