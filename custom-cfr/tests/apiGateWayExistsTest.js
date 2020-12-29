@@ -3,7 +3,7 @@
 	const AWS = require('aws-sdk');
 	const g = require('../utils/apiGateway');
 	const credentials = new AWS.SharedIniFileCredentials({
-        profile: 'pasley_hill_admin'
+        profile: 'pasley_hill'
     });
 	AWS.config.credentials = credentials;
 	AWS.config.region = 'us-east-1';

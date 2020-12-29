@@ -3,23 +3,20 @@ frameworkVersion: '2'
 
 custom: 
   forceResourceRun: ${file(./config.js):fetchRandomKey}
-  weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-weatherApi
-
+  apiName: "WeatherApi"
+  weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-${self:custom.apiName}
 provider:
   name: aws
   runtime: nodejs12.x
   stage: dev
   region: us-east-1
   environment:
-    API_NAME: "WeatherApi"
+    API_NAME: ${self:custom.apiName}
+    STAGE: ${opt:stage, self:provider.stage}
 
 functions:
   deployProject:
     handler: lambdas/deployProject.handler
-    environment:
-      API_ARN: ${self:custom.weatherApiArn}
-      API_GW_ROLE: 
-        Fn::GetAtt: [ ApigAwsProxyRole, Arn ]
   weatherApi:
     handler: lambdas/weatherApi.handler
 
@@ -29,7 +26,16 @@ resources:
     DeployProjectResource:
       Type: Custom::DeployProjectResource
       Properties:
-        ForceRun: ${self:custom.forceResourceRun}
+        ApiName: ${self:custom.apiName}
+        Stage: ${opt:stage, self:provider.stage}
+        ApiArn: 
+          Fn::GetAtt:
+            - WeatherApiLambdaFunction 
+            - Arn
+        ApiRole:
+          Fn::GetAtt:
+            - ApigAwsProxyRole
+            - Arn
         ServiceToken:
           Fn::GetAtt:
             - DeployProjectLambdaFunction 
