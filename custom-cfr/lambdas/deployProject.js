@@ -3,41 +3,67 @@
 //const AWS = require('aws-sdk');
 
 module.exports.handler = async (event,context) => {
-  
+  const cloudFormation = require('../utils/cfnResponse'); 
   try{
-    const cloudFormation = require('../utils/cfnResponse'); 
     const gApi = require('../utils/apiGateway');
 
     const { ApiArn, ApiName, ApiRole, Stage } = event.ResourceProperties;
 
     console.info("EVENT DATA:",JSON.stringify(event,null,2));
     console.info("API INFO", ApiArn, ApiName, ApiRole);
-    const AWS = require('aws-sdk');
 
-    if(!gApi.doesApiAlreadyExists( ApiName )){
-        await gApi.createApiGateway({
+    const AWS = require('aws-sdk');
+    AWS.config.region = 'us-east-1';
+
+    let currentApi = await gApi.findApi( ApiName, AWS);
+
+    /**
+     * If the API is not found, 
+     * create the API. 
+     */
+    if(currentApi === null){
+      currentApi = await gApi.createApiGateway({
+          AWS,
+          lambdaArn: ApiArn,
+          role: ApiRole,
+          apiName: ApiName,
+          stage: Stage
+      });
+      console.info("API Created",JSON.stringify(currentApi,null,2));
+    }
+
+
+    if(event.RequestType === "Update" && event.OldResourceProperties){
+      const old = event.OldResourceProperties;
+      const recreateAPi = (old.ApiName && old.ApiName !== ApiName) || 
+      (old.ApiRole && old.ApiRole !== ApiRole) || 
+      (old.ApiArn && old.ApiArn !== ApiArn) ||
+      (old.stage && old.stage !== stage);
+
+      if(recreateAPi){
+        console.info("Deleting API",currentApi);
+        await gApi.deleteApi(currentApi.id,AWS);
+        console.info("Deleted API",currentApi.id);
+
+        currentApi = await gApi.createApiGateway({
           AWS,
           lambdaArn: ApiArn,
           role: ApiRole,
           apiName: ApiName,
           stage: Stage
         });
+        console.info("API Re-Created",JSON.stringify(currentApi,null,2));
+      }
     }
 
-    if(event.RequestType === "Update"){
-
-      const { oldApiArn, oldApiName } = event.OldResourceProperties;
-
-    }
-
-    var input = parseInt(event.ResourceProperties.Input);
-    var responseData = {Value: input * 5};
+    const responseData = { Value: currentApi.id };
     await cloudFormation.asyncResponse(event, 
       context, 
       cloudFormation.SUCCESS, 
       responseData,
       event.PhysicalResourceId
     );
+
     console.log("Response sent successfully");
   }
   catch(error){

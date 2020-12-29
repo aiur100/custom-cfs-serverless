@@ -1,10 +1,14 @@
-service: weather-3
+service: weather-app
 frameworkVersion: '2'
+
+plugins:
+  - serverless-iam-roles-per-function
 
 custom: 
   forceResourceRun: ${file(./config.js):fetchRandomKey}
-  apiName: "WeatherApi"
+  apiName: "TulsaWeatherApp"
   weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-${self:custom.apiName}
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -17,6 +21,21 @@ provider:
 functions:
   deployProject:
     handler: lambdas/deployProject.handler
+    iamRoleStatements:
+      - Effect: "Allow"        
+        Action:
+          - apigateway:*
+        Resource: 
+          - "*"
+      - Effect: "Allow"
+        Action:
+          - iam:GetRole
+          - iam:PassRole
+        Resource:
+        - Fn::GetAtt:
+            - ApigAwsProxyRole
+            - Arn
+        #Resource: "arn:aws:apigateway:${self:provider.region}::/restapis/${self:custom.awsAccountId}/*"
   weatherApi:
     handler: lambdas/weatherApi.handler
 

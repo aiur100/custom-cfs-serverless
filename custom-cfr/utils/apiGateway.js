@@ -61,6 +61,7 @@ async function createApiGateway(apiConfig){
     }).promise();
 
     console.log(deploymentResponse);
+    return restResponse;
 }
 
 async function doesApiAlreadyExists(name,AWS){
@@ -87,4 +88,35 @@ async function doesApiAlreadyExists(name,AWS){
     return false;
 }
 
-module.exports = { createApiGateway, doesApiAlreadyExists };
+async function findApi(name,AWS){
+    try{
+        const apig = new AWS.APIGateway({
+            apiVersion: '2015/07/09'
+        });
+        let page = null;
+        do{
+            const params = { limit: 100, position: page };
+            const response = await apig.getRestApis(params).promise();
+            const apiItem = response.items.find( api => api.name === name );
+            if(apiItem){
+                return apiItem;
+            }
+            page = response.position;
+        }while(page);
+        return null;
+    }
+    catch(error){
+        throw error;
+    }
+}
+
+async function deleteApi(restApiId,AWS){
+    const apig = new AWS.APIGateway({
+		apiVersion: '2015/07/09'
+    });
+    await apig.deleteRestApi({
+        restApiId:restApiId
+    }).promise();
+}
+
+module.exports = { createApiGateway, doesApiAlreadyExists,findApi,deleteApi };
