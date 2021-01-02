@@ -6,14 +6,15 @@ module.exports.handler = async (event,context) => {
   const cloudFormation = require('../utils/cfnResponse'); 
   try{
     const gApi = require('../utils/apiGateway');
+    const AWS = require('aws-sdk');
+    AWS.config.region = 'us-east-1';
 
     const { ApiArn, ApiName, ApiRole, Stage } = event.ResourceProperties;
 
     console.info("EVENT DATA:",JSON.stringify(event,null,2));
     console.info("API INFO", ApiArn, ApiName, ApiRole);
 
-    const AWS = require('aws-sdk');
-    AWS.config.region = 'us-east-1';
+
 
     let currentApi = await gApi.findApi( ApiName, AWS);
 
@@ -22,6 +23,7 @@ module.exports.handler = async (event,context) => {
      * create the API. 
      */
     if(currentApi === null){
+      console.info("Creating API...");
       currentApi = await gApi.createApiGateway({
           AWS,
           lambdaArn: ApiArn,
@@ -36,9 +38,9 @@ module.exports.handler = async (event,context) => {
     if(event.RequestType === "Update" && event.OldResourceProperties){
       const old = event.OldResourceProperties;
       const recreateAPi = (old.ApiName && old.ApiName !== ApiName) || 
-      (old.ApiRole && old.ApiRole !== ApiRole) || 
-      (old.ApiArn && old.ApiArn !== ApiArn) ||
-      (old.stage && old.stage !== stage);
+                          (old.ApiRole && old.ApiRole !== ApiRole) || 
+                          (old.ApiArn && old.ApiArn !== ApiArn) ||
+                          (old.stage && old.stage !== stage);
 
       if(recreateAPi){
         console.info("Deleting API",currentApi);

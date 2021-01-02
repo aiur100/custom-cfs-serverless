@@ -1,4 +1,4 @@
-service: weather-app
+service: custom-resource
 frameworkVersion: '2'
 
 plugins:
@@ -45,6 +45,7 @@ resources:
     DeployProjectResource:
       Type: Custom::DeployProjectResource
       Properties:
+        ForceRun: ${self:custom.forceResourceRun}
         ApiName: ${self:custom.apiName}
         Stage: ${opt:stage, self:provider.stage}
         ApiArn: 
