@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "local-start":"sls offline --stage local & cd spa & npm start"
+    "local-api":"sls offline --stage local",
+    "local-spa":"cd spa && npm start"
   },
   "keywords": [],
   "author": "Christopher R. Hill",

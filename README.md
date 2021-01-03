@@ -7,7 +7,13 @@
 
 
 ## Local Developmnet 
+To develop locally and increase development cycles, we use `serverless offline` to emulate API gateway locally, and React's own local development scripts. 
 
+There are two short cuts that you need to use to start local development.  Each will continue running in the terminal screens you open, so you will need to have two terminal instances running.
+* In one terminal run `npm run local-api` and this will start `serverless offline`. 
+    * If successful, visit `http://localhost:3000/` and you should see output from the `weatherApi` lambda function from `./lambdas/weatherApi.js`. 
+* In another terminal run `npm run local-spa` and this will run react's `react-scripts start` mapped to port 3006.  
+    * If successful, visit `http://localhost:3006` and you should see output from the react app in `spa/src/App.js`. 
 
 # Voice Foundry Weather Web App
 
