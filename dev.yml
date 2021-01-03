@@ -1,1 +1,2 @@
 handler: lambdas/weatherApi.handler
+environment: ${file(./apiEnv.json)}

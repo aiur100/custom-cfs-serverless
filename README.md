@@ -5,6 +5,10 @@
     * Create a new API Gateway Rest API using AWS_PROXY and point it to the Lambda function
     * Create a new S3 Bucket set-up for static websites 
 
+## Required Environment Files
+* `./apiEnv.json` with a single JSON key/value of weatherApiKey from Open Weather Map API.
+* `./spa/.env` with `REACT_APP_API_URL=http://localhost:3000/local/` for local development
+    * This should be updated for production.  
 
 ## Local Developmnet 
 To develop locally and increase development cycles, we use `serverless offline` to emulate API gateway locally, and React's own local development scripts. 

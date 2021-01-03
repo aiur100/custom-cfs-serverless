@@ -1,4 +1,5 @@
 handler: lambdas/weatherApi.handler
+environment: ${file(./apiEnv.json)}
 events:
   - http:
       path: '/'
