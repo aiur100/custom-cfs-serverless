@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local-start":"sls offline --stage local & cd spa & npm start"
   },
   "keywords": [],
   "author": "Christopher R. Hill",
   "license": "ISC",
   "devDependencies": {
     "serverless-iam-roles-per-function": "^3.0.1",
+    "serverless-offline": "^6.8.0",
     "serverless-s3-sync": "^1.15.0"
   },
   "dependencies": {

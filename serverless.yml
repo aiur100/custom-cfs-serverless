@@ -3,10 +3,12 @@ frameworkVersion: '2'
 
 plugins:
   - serverless-iam-roles-per-function
+  - serverless-offline
 
 custom: 
   forceResourceRun: ${file(./config.js):fetchRandomKey}
   apiName: "TulsaWeatherApp"
+  appStage: ${opt:stage, self:provider.stage}
   weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-${self:custom.apiName}
 
 provider:
@@ -16,7 +18,7 @@ provider:
   region: us-east-1
   environment:
     API_NAME: ${self:custom.apiName}
-    STAGE: ${opt:stage, self:provider.stage}
+    STAGE: ${self:custom.appStage}
 
 functions:
   deployProject:
@@ -35,9 +37,7 @@ functions:
         - Fn::GetAtt:
             - ApigAwsProxyRole
             - Arn
-        #Resource: "arn:aws:apigateway:${self:provider.region}::/restapis/${self:custom.awsAccountId}/*"
-  weatherApi:
-    handler: lambdas/weatherApi.handler
+  weatherApi: ${file(./${self:custom.appStage}.yml)}
 
 resources:
   Resources:

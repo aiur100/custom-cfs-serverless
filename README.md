@@ -1,3 +1,14 @@
+# Custom Resource 
+
+## Logic Flow
+* When creating the project
+    * Create a new API Gateway Rest API using AWS_PROXY and point it to the Lambda function
+    * Create a new S3 Bucket set-up for static websites 
+
+
+## Local Developmnet 
+
+
 # Voice Foundry Weather Web App
 
 This is a weather web app that is powered by DarkSky API, AWS Lambda, AWS API Gateway and AWS S3.  The front-end/client side application is built on React, and the app is deployed to S3 using the S3 static website feature available.  

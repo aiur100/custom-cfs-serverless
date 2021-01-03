@@ -1,0 +1,1 @@
+handler: lambdas/weatherApi.handler

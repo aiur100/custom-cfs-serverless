@@ -1,3 +1,25 @@
+async function updateApiGatewayName(restApiId,newName,AWS){
+    try{
+        const apig = new AWS.APIGateway({
+            apiVersion: '2015/07/09'
+        });
+        const params = {
+            restApiId, 
+            patchOperations: [
+                {
+                    op: "replace",
+                    path: "/name",
+                    value: newName
+                }
+            ]
+         };
+        return await apigateway.updateRestApi(params).promise();
+    }
+    catch(error){
+        return Promise.reject(error);
+    }
+}
+
 async function createApiGateway(apiConfig){
     try{
         const {
