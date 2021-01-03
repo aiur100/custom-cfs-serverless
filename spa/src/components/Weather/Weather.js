@@ -1,11 +1,11 @@
 import React,{ useState,useEffect } from 'react';
+import Condition from "./../Condition/Condition.js"; 
 
 const Weather = () => {
 
     let [ weatherResponse,  setWeatherResponse ] = useState({});
 
     function getWeather() {
-        console.log(process.env.REACT_APP_API_URL);
         fetch(process.env.REACT_APP_API_URL)
                 .then(r => r.json())
                 .then(r => setWeatherResponse(r) )
@@ -18,8 +18,9 @@ const Weather = () => {
 
     return (
         <div>
-            <h1>Some forecast</h1>
             {JSON.stringify(weatherResponse)}
+             <Condition condition={weatherResponse && weatherResponse.weatherData ? weatherResponse.weatherData.weather[0].icon : null} />
+
         </div>
     )
 }
