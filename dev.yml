@@ -5,4 +5,6 @@ package:
     - "utils/apiGateway.js"
     - "utils/cfnResponse.js"
     - "utils/npmRunBuild.js"
+    - "spa"
+    - "spa/**"
 environment: ${file(./apiEnv.json)}
