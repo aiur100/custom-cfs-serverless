@@ -1,10 +1,10 @@
-# Custom Resource 
+# Custom Resource Deployed Weather APP
 
 ## Logic Flow
 * When creating the project
     * Create a new API Gateway Rest API using AWS_PROXY and point it to the Lambda function
     * Create a new S3 Bucket set-up for static websites 
-
+s
 ## Required Environment Files
 * `./apiEnv.json` with a single JSON key/value of weatherApiKey from Open Weather Map API.
 * `./spa/.env` with `REACT_APP_API_URL=http://localhost:3000/local/` for local development
@@ -19,21 +19,9 @@ There are two short cuts that you need to use to start local development.  Each 
 * In another terminal run `npm run local-spa` and this will run react's `react-scripts start` mapped to port 3006.  
     * If successful, visit `http://localhost:3006` and you should see output from the react app in `spa/src/App.js`. 
 
-# Voice Foundry Weather Web App
 
-This is a weather web app that is powered by DarkSky API, AWS Lambda, AWS API Gateway and AWS S3.  The front-end/client side application is built on React, and the app is deployed to S3 using the S3 static website feature available.  
-
-* The `./api` directory contains the lambda source for the server-side responses.  
-* The `./spa` directory (single page application) will contain the web app. 
-* The `./tests` directory will contain all tests needed for the API, and the front end tests.
-
-## Functionality
-* The React app should use the browser location services to then request weather data from the API GW and Lambda function. 
-* We will focus on providing today's temperature and precipitation, and provide a clothing recommendation.   
-
-## Infrastructure
-The deployment process should be self-managing, as much as possible. 
-* Some questions. 
-    * On deploy, create S3 bucket. 
-    * Get S3 bucket static URL and output it. 
-    * Make sure that the react project can automatically be updated with the API Gateway URL
+# Current Todos
+* Test/POC deploying the Lambda-backed custom resource using serverless packaging that will include the spa as an artifact. 
+* Add S3 static site routines to Custom Resource Lambda. 
+* Add code that creates a .env file and adds it to the spa.  The .env file should add the variable for the AWS API Gateway URL that results.  
+* Add the code that runs the npm script for building the react app, which should add the environment variable's values to the project
