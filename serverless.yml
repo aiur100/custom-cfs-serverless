@@ -1,6 +1,17 @@
 service: custom-resource
 frameworkVersion: '2'
 
+package:
+  individually: true
+  exclude:
+    - apiEnv.json
+    - "*.yml"
+    - "config.js"
+    - "tests"
+    - "tests/**"
+    - ".gitignore"
+    - "README.md"
+
 plugins:
   - serverless-iam-roles-per-function
   - serverless-offline
@@ -23,6 +34,12 @@ provider:
 functions:
   deployProject:
     handler: lambdas/deployProject.handler
+    package:
+      exclude:
+        - "lambdas/weatherApi.js"
+        - ".gitignore"
+        - "README.md"
+        - "utils/weatherResponse.js"
     iamRoleStatements:
       - Effect: "Allow"        
         Action:

@@ -1,2 +1,8 @@
 handler: lambdas/weatherApi.handler
+package:
+  exclude:
+    - "lambdas/deployProject.js"
+    - "utils/apiGateway.js"
+    - "utils/cfnResponse.js"
+    - "utils/npmRunBuild.js"
 environment: ${file(./apiEnv.json)}
