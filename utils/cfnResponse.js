@@ -18,7 +18,7 @@ const FAILED = "FAILED";
  async function asyncResponse(event, context, responseStatus, responseData, physicalResourceId) {
     const responseBody = JSON.stringify({
         Status: responseStatus,
-        Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
+        Reason: responseData.Value+": See the details in CloudWatch Log Stream: " + context.logStreamName,
         PhysicalResourceId: physicalResourceId || context.logStreamName,
         StackId: event.StackId,
         RequestId: event.RequestId,

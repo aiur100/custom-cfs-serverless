@@ -1,4 +1,4 @@
-service: custom-resource
+service: tulsa-weather
 frameworkVersion: '2'
 
 package:
@@ -11,6 +11,9 @@ package:
     - "tests/**"
     - ".gitignore"
     - "README.md"
+    - "package-lock.json"
+    - "package.json"
+    - "spa/README.md"
 
 plugins:
   - serverless-iam-roles-per-function
@@ -20,6 +23,7 @@ custom:
   forceResourceRun: ${file(./config.js):fetchRandomKey}
   apiName: "TulsaWeatherApp"
   appStage: ${opt:stage, self:provider.stage}
+  websiteBucket: ${self:custom.appStage}-tulsa-weather-app
   weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-${self:custom.apiName}
 
 provider:
@@ -41,6 +45,21 @@ functions:
         - "README.md"
         - "utils/weatherResponse.js"
     iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:PutObjectAcl
+          - s3:GetObject
+          - s3:ListBucket
+          - s3:DeleteObject
+          - s3:DeleteBucket
+          - s3:PutBucketWebsite
+          - s3:GetBucketWebsite
+        Resource: "arn:aws:s3:::${self:custom.websiteBucket}/*"
+      - Effect: 'Allow'
+        Action:
+          - s3:*
+        Resource: "arn:aws:s3:::*"
       - Effect: "Allow"        
         Action:
           - apigateway:*
@@ -61,10 +80,12 @@ resources:
     #This CF Custom Resource Deploys the entire project
     DeployProjectResource:
       Type: Custom::DeployProjectResource
+      DependsOn: DeployProjectIamRoleLambdaExecution
       Properties:
         ForceRun: ${self:custom.forceResourceRun}
         ApiName: ${self:custom.apiName}
         Stage: ${opt:stage, self:provider.stage}
+        BucketName: ${self:custom.websiteBucket}
         ApiArn: 
           Fn::GetAtt:
             - WeatherApiLambdaFunction 

@@ -1,20 +1,17 @@
 'use strict';
-//const apiGateway = require('../utils/apiGateway');
-//const AWS = require('aws-sdk');
 
 module.exports.handler = async (event,context) => {
   const cloudFormation = require('../utils/cfnResponse'); 
+  const requestType = event.RequestType;
   try{
     const gApi = require('../utils/apiGateway');
     const AWS = require('aws-sdk');
     AWS.config.region = 'us-east-1';
 
-    const { ApiArn, ApiName, ApiRole, Stage } = event.ResourceProperties;
+    const { ApiArn, ApiName, ApiRole, Stage, BucketName } = event.ResourceProperties;
 
     console.info("EVENT DATA:",JSON.stringify(event,null,2));
     console.info("API INFO", ApiArn, ApiName, ApiRole);
-
-
 
     let currentApi = await gApi.findApi( ApiName, AWS);
 
@@ -22,7 +19,7 @@ module.exports.handler = async (event,context) => {
      * If the API is not found, 
      * create the API. 
      */
-    if(currentApi === null){
+    if((requestType === "Update" || requestType === "Create") && currentApi === null){
       console.info("Creating API...");
       currentApi = await gApi.createApiGateway({
           AWS,
@@ -35,7 +32,7 @@ module.exports.handler = async (event,context) => {
     }
 
 
-    if(event.RequestType === "Update" && event.OldResourceProperties){
+    if(requestType === "Update" && event.OldResourceProperties){
       const old = event.OldResourceProperties;
       const recreateAPi = (old.ApiName && old.ApiName !== ApiName) || 
                           (old.ApiRole && old.ApiRole !== ApiRole) || 
@@ -58,6 +55,15 @@ module.exports.handler = async (event,context) => {
       }
     }
 
+    if(requestType === "Update" || requestType === "Create"){
+      const { s3Create } = require(".././utils/s3Create");
+      const created = await s3Create(BucketName,AWS);
+
+      if(created){
+        console.info(`${BucketName} was created`);
+      }
+    }
+    
     const responseData = { Value: currentApi.id };
     await cloudFormation.asyncResponse(event, 
       context, 
