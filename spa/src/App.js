@@ -4,13 +4,18 @@ import Weather from "./components/Weather/Weather.js";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Tulsa Weather</h1>
-      </header>
-      <main>
-        <Weather/>
-      </main>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="centerItem">
+            <div className="card">
+              <div className="card-body">
+                <h1>Tulsa Weather</h1>
+                <hr/>
+                <Weather/>
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
   );
 }

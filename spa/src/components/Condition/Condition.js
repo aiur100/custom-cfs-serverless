@@ -5,7 +5,7 @@ const Condition = (props) => {
         return `http://openweathermap.org/img/wn/${props.condition}@4x.png`
     }
     return (
-        <div>
+        <div className="centerItem"> 
             <img src={imgUrl()}/>
         </div>
     )
