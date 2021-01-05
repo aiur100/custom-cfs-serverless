@@ -1,5 +1,5 @@
 const { npmRunBuild } = require("../utils/npmRunBuild.js");
 
-npmRunBuild().then((r) => {
+npmRunBuild("test").then((r) => {
     console.log(r);
 });

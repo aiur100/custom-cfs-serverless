@@ -1,3 +1,4 @@
+const defaultRegion = "us-east-1";
 async function updateApiGatewayName(restApiId,newName,AWS){
     try{
         const apig = new AWS.APIGateway({
@@ -156,4 +157,8 @@ async function deleteApi(restApiId,AWS){
     }
 }
 
-module.exports = { createApiGateway, doesApiAlreadyExists,findApi,deleteApi };
+function executeApiUrl(restApiId,stage){
+    return `https://${restApiId}.execute-api.${defaultRegion}.amazonaws.com/${stage}`;
+}
+
+module.exports = { createApiGateway, doesApiAlreadyExists,findApi,deleteApi,executeApiUrl };

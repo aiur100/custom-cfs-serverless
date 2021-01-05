@@ -62,18 +62,15 @@ async function deleteBucket(Bucket,AWS){
 }
 
 async function copyFolder(directoryName,Bucket){
-    const s3FolderUpload = require('s3-folder-upload')
-    // ES6: import s3FolderUpload from 's3-folder-upload'
-    // I strongly recommend to save your credentials on a JSON or ENV variables, or command line args
+    const s3FolderUpload = require('s3-folder-upload');
     const credentials = {
         "region": "us-east-1",
         "bucket": Bucket
     }
-    
     // optional options to be passed as parameter to the method
     const options = {
         useFoldersForFileTypes: false,
-        useIAMRoleCredentials: false
+        useIAMRoleCredentials: true
     }
     await s3FolderUpload(directoryName, credentials, options);
 }

@@ -7,4 +7,5 @@ package:
     - "utils/npmRunBuild.js"
     - "spa"
     - "spa/**"
+    - "build.sh"
 environment: ${file(./apiEnv.json)}

@@ -1,21 +1,17 @@
-//const util = require('util');
-//const exec = util.promisify(require('child_process').exec);
-
-module.exports.npmRunBuild = () => {
+module.exports.npmRunBuild = (apiUrl) => {
    return new Promise((resolve,reject) => {
         const { spawn } = require('child_process');
-        const top = spawn('bash', ['build.sh']);
+        const job = spawn('bash', ['build.sh',apiUrl]);
         
-        top.stdout.on('data', (data) => {
+        job.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
         });
         
-        top.stderr.on('data', (data) => {
+        job.stderr.on('data', (data) => {
             console.error(`stderr: ${data.toString('utf8')}`);
-            //return reject(data.toString('utf8'));
         });
         
-        top.on('close', (code) => {
+        job.on('close', (code) => {
             console.log(`child process exited with code ${code}`);
             return resolve(code);
         });

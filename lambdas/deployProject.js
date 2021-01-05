@@ -55,8 +55,9 @@ module.exports.handler = async (event,context) => {
       }
     }
 
+    const { s3Create,copyFolder } = require("../utils/s3utils");
+
     if(requestType === "Update" || requestType === "Create"){
-      const { s3Create } = require("../utils/s3utils");
       const created = await s3Create(BucketName,AWS);
 
       if(created){
@@ -67,12 +68,17 @@ module.exports.handler = async (event,context) => {
       }
     }
 
+    const apiUrl = gApi.executeApiUrl(currentApi.id,Stage)+"/weather";
+
     if(requestType === "Update" || requestType === "Create"){
       const { npmRunBuild } = require("../utils/npmRunBuild");
-      await npmRunBuild();
+      await npmRunBuild(apiUrl);
+      await copyFolder("/tmp/spa/build",BucketName);
     }
     
-    const responseData = { Value: currentApi.id };
+    const responseData = { 
+      apiUrl
+    };
     await cloudFormation.asyncResponse(event, 
       context, 
       cloudFormation.SUCCESS, 
