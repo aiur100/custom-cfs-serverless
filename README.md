@@ -1,23 +1,64 @@
 # Custom Resource Deployed Weather APP
 Christopher R. Hill (Chill)
-## Logic Flow
-* When creating the project
+## Overview
+---
+This is a self-contained weather app project.  We use React from the front-end, API Gateway and Lambda together as the back-end, and host the React app on an S3 static site.
+
+This project is built on the `serverless` framework and we use AWS CloudFormation and a CloudFormation custom resource to wire up the whole project on deployment. 
+
+### Custom Resource Procedures
+
+* When deploying the project, a single lambda-backed cloudformation custom resource does the following:
     * Create a new API Gateway Rest API using AWS_PROXY and point it to the Lambda function
-    * Create a new S3 Bucket set-up for static websites 
-s
-## Required Environment Files
-* `./apiEnv.json` with a single JSON key/value of weatherApiKey from Open Weather Map API.
+    * Create a new S3 Bucket set-up for static websites. 
+    * Runs the `build.sh` file that is at the root of this project which runs the React build functions, and configs the react app to point to the API Gateway URL created.
+    * Puts all the react build files on the S3 Bucket that is now a static website.
+
+### Project structure
+* `./lambdas` - contains the lambda functions.
+  * `./lambdas/deployProject.js` - This is the lambda function used by the deployment custom resource. There is no easy method of local development of this script, please avoid changing this, unless you know what you're doing. :) 
+  * `./lambdas/weatherApi.js` - This is the lambda function that responds to weather data requests for Tulsa, OK. 
+* `serverless.yml` - This is the main *serverless framework* config file. YAML format.
+  * `<dev|prod|local>.yml` - These are the sub config files for the `weatherApi` lambda function.  
+* `./spa` - This contains the React Tulsa, OK Weather App.  
+* `./utils` - This contains the various abstracted functions needed for both the `deployProject` and `weatherApi` lambda functions. 
+* `./build.sh` - This is used during the deployment process.  This moves the `spa` to the Lambda environment `/tmp` directory (because that's where you can write in Lambda) and the react build process is run.  This also configures the React App with the API Gateway URL that is passed to it.  
+* `tests` - These tests are really more POC's for me at this time, if I don't get time to change these, that's what they will be. 
+* `config.js` - This is a simple function that will generate a random number.  I use this to ensure the AWS Custom Resource to run every time. 
+
+## Getting started
+---
+### Requirements 
+* NodeJS 12 or higher. 
+* The serverless framework.
+
+  * If you have node already, run `npm install -g serverless`
+  * Documentation on serverless getting started: https://www.serverless.com/framework/docs/getting-started/
+
+* Install dependencies for this project & api. Run `npm install` on project root directory.
+* If you want to run the React Weather app locally (spa), `cd spa` and then `npm install`.
+
+### Required Environment Files
+* `./apiEnv.json` with a single JSON key/value of weatherApiKey from RapidAPI's "Open Weather Map API". 
+  * Subscribe to a free API key here https://rapidapi.com/community/api/open-weather-map
+  * **WARNING:** Do not use an API key directly from Open Weather Map -- it will not work by default. 
+    ```
+    {
+        "weatherApiKey":"<YOUR-SECRET-KEY>"
+    }
+    ``` 
 * `./spa/.env` with `REACT_APP_API_URL=http://localhost:3000/local/` for local development
-    * This should be updated for production.  
+    * **IMPORTANT**: When deployed using the procedure described below, the value here is automatically generated and configured with the API Gateway execute URL. 
 
 ## Local Developmnet 
-To develop locally and increase development cycles, we use `serverless offline` to emulate API gateway locally, and React's own local development scripts. 
+---
+To develop locally and increase development speed, we use `serverless offline` to emulate API gateway locally, and React's own local development scripts. 
 
 There are two short cuts that you need to use to start local development.  Each will continue running in the terminal screens you open, so you will need to have two terminal instances running.
-1. `npm install`
-2. In one terminal run `npm run local-api` and this will start `serverless offline`. 
+1. *If you haven't already* Install dependencies for api and spa - Root project directory `npm install` and then `cd spa` and `npm install`, then go back to the root project directory `cd ..`
+2. **Start local api server**: In one terminal run `npm run local-api` and this will start `serverless offline`. 
     * If successful, visit `http://localhost:3000/` and you should see output from the `weatherApi` lambda function from `./lambdas/weatherApi.js`. 
-3. In another terminal run `npm run local-spa` and this will run react's `react-scripts start` mapped to port 3006.  
+3. **Start local react app & server**: In another terminal run `npm run local-spa` and this will run react's `react-scripts start` mapped to port 3006.  
     * If successful, visit `http://localhost:3006` and you should see output from the react app in `spa/src/App.js`. 
 
 ## Deployment
