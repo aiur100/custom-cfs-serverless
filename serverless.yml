@@ -1,4 +1,4 @@
-service: tulsa-weather-2
+service: tulsa-weather
 frameworkVersion: '2'
 
 package:
