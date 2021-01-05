@@ -1,4 +1,3 @@
-const defaultRegion = "us-east-1";
 
 async function createApiGateway(apiConfig){
     try{
@@ -134,8 +133,8 @@ async function deleteApi(restApiId,AWS){
     }
 }
 
-function executeApiUrl(restApiId,stage){
-    return `https://${restApiId}.execute-api.${defaultRegion}.amazonaws.com/${stage}`;
+function executeApiUrl(restApiId,stage,region){
+    return `https://${restApiId}.execute-api.${region}.amazonaws.com/${stage}`;
 }
 
 module.exports = { createApiGateway, doesApiAlreadyExists,findApi,deleteApi,executeApiUrl };

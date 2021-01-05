@@ -8,10 +8,11 @@ module.exports.handler = async (event,context) => {
     const gApi = require('../utils/apiGateway');
     const { s3Create,copyFolder,deleteBucket } = require("../utils/s3utils");
     const AWS = require('aws-sdk');
-    AWS.config.region = 'us-east-1';
 
-    const { ApiArn, ApiName, ApiRole, Stage, BucketName } = 
+    const { ApiArn, ApiName, ApiRole, Stage, BucketName, Region } = 
         event.ResourceProperties;
+
+    AWS.config.region = Region;
 
     console.info("EVENT DATA:",JSON.stringify(event,null,2));
     console.info("API INFO", ApiArn, ApiName, ApiRole);
@@ -95,7 +96,7 @@ module.exports.handler = async (event,context) => {
       }
     }
 
-    const apiUrl = gApi.executeApiUrl(currentApi.id,Stage)+"/weather";
+    const apiUrl = gApi.executeApiUrl(currentApi.id,Stage,Region)+"/weather";
 
     if(requestType === "Update" || requestType === "Create"){
       const { npmRunBuild } = require("../utils/npmRunBuild");
@@ -105,7 +106,7 @@ module.exports.handler = async (event,context) => {
     
     const responseData = { 
       ApiUrl: apiUrl,
-      WebUrl: `http://${BucketName}.s3-website-us-east-1.amazonaws.com/`
+      WebUrl: `http://${BucketName}.s3-website-${Region}.amazonaws.com/`
     };
 
     await cloudFormation.asyncResponse(event, 
