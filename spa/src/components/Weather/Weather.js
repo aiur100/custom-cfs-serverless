@@ -21,7 +21,7 @@ const Weather = () => {
         if(!weatherResponse.weatherData.weather)
             return defaultResponse;
         if(!Array.isArray(weatherResponse.weatherData.weather) || 
-            !weatherResponse.weatherData.weather.length > 0)
+            (weatherResponse.weatherData.weather.length > 0) === false)
             return defaultResponse;
         return weatherResponse.weatherData.weather.map(w => {
             return w.icon; 
