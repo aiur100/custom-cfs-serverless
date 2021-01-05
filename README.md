@@ -76,7 +76,7 @@ There are two short cuts that you need to use to start local development.  Each 
 
 ### Steps 
 * Run `sls deploy --stage [prod|dev] --aws-profile <your-profile>`
-  * If your using your default AWS profile, just omit the `--aws-profile` flag.
+  * If you're using your default AWS profile, just omit the `--aws-profile` flag.
   * **Example:** `sls deploy --stage dev --aws-profile my-profile`
 
 **WARNING:** This first deployment always takes the longest time.  Generally, this deployment will take a few minutes every time, so this is not recommended for development.
@@ -89,7 +89,6 @@ There are two short cuts that you need to use to start local development.  Each 
 * **DONE** Add the code that runs the npm script for building the react app.
 * Clean up and refactor code. 
 * Look into react's testing framework and see if we can use that for some e2e/integration testing
-* Ensure that deletes and updates are handled in the custom resource stack
+* **DONE** - Ensure that deletes and updates are handled in the custom resource stack
 * Update 
-* *Important* - Add outputs for the API url and the S3 website url. 
-* *Important* - Why am I not seeing a secure website with S3? 
+* **DONE** - Add outputs for the API url and the S3 website url. 

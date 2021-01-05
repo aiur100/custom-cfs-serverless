@@ -1,3 +1,21 @@
+async function doesBucketExist(Bucket,AWS){
+    const s3 = new AWS.S3();
+    try{
+        await s3.headBucket({ Bucket }).promise();
+    }
+    catch(error){
+        if(error.code === "NotFound"){
+            console.info(`S3 Bucket ${Bucket} not found`);
+            return false;
+        }
+        else{
+            console.error(`An error occurred checking Bucket ${Bucket} existence`,{error});
+            return Promise.reject(error);
+        }
+    }
+    return true;
+}
+
 /**
  * If a given bucket doesn't exist, this will create
  * that bucket.  
@@ -13,7 +31,7 @@ async function s3Create(Bucket,AWS){
     let bucketExists = true;
     const s3 = new AWS.S3();
     try{
-        let response = await s3.headBucket({ Bucket }).promise();
+        await s3.headBucket({ Bucket }).promise();
     }
     catch(error){
         if(error.code === "NotFound"){
@@ -58,7 +76,41 @@ async function s3Create(Bucket,AWS){
 }
 
 async function deleteBucket(Bucket,AWS){
-    // nothing
+    try{
+        const s3 = new AWS.S3();
+
+        if(!await doesBucketExist(Bucket,AWS)){
+            return false;
+        }
+
+        const objects = await s3.listObjects({ Bucket }).promise();
+        const clearBucket = objects.Contents && 
+                            Array.isArray(objects.Contents) &&
+                            objects.Contents.length > 0;
+
+        if(clearBucket){
+            console.info("Bucket contains content. Deleting all objects...");
+            await Promise.all(objects.Contents.map(async s3Object => {
+                await s3.deleteObject({
+                    Bucket,
+                    Key: s3Object.Key
+                }).promise();
+                console.info(s3Object.Key+" was deleted");
+            }));
+            console.info("Bucket cleared successfully!");
+        }
+
+        console.info("Bucket "+Bucket+" being deleted...");
+
+        await s3.deleteBucket({ Bucket }).promise();
+
+        console.info("Bucket "+Bucket+" deleted successfully!");
+
+        return true;
+    }
+    catch(error){
+        return Promise.reject(error);
+    }
 }
 
 async function copyFolder(directoryName,Bucket){
@@ -74,4 +126,5 @@ async function copyFolder(directoryName,Bucket){
     }
     await s3FolderUpload(directoryName, credentials, options);
 }
-module.exports = { s3Create, copyFolder };
+
+module.exports = { s3Create, copyFolder,deleteBucket,doesBucketExist };

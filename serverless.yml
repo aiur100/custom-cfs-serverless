@@ -1,4 +1,4 @@
-service: tulsa-weather
+service: ok-weather
 frameworkVersion: '2'
 
 package:
@@ -21,9 +21,9 @@ plugins:
 
 custom: 
   forceResourceRun: ${file(./config.js):fetchRandomKey}
-  apiName: "TulsaWeatherApp"
   appStage: ${opt:stage, self:provider.stage}
-  websiteBucket: ${self:custom.appStage}-tulsa-weather-app
+  websiteBucket: ${self:custom.appStage}-${self:service}
+  apiName: ${self:custom.appStage}TulsaWeatherApp
   weatherApiArn: arn:aws:lambda:us-east-1:#{AWS::AccountId}:function:${self:service}-${opt:stage, self:provider.stage}-${self:custom.apiName}
 
 provider:
@@ -127,3 +127,9 @@ resources:
                 Service: "apigateway.amazonaws.com"
         ManagedPolicyArns:
           - !Ref ApiInvokeFunctionPolicy
+  Outputs: 
+    WebUrl: 
+      Value: 
+        Fn::GetAtt: 
+          - DeployProjectResource
+          - WebUrl

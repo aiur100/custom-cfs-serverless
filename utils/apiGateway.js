@@ -31,7 +31,6 @@ async function createApiGateway(apiConfig){
             apiName
         } = apiConfig; 
 
-        AWS.config.region = 'us-east-1';
         const apig = new AWS.APIGateway({
             apiVersion: '2015/07/09'
         });
@@ -95,7 +94,6 @@ async function createApiGateway(apiConfig){
 
 async function doesApiAlreadyExists(name,AWS){
     try{
-        AWS.config.region = 'us-east-1';
         const apig = new AWS.APIGateway({
             apiVersion: '2015/07/09'
         });
