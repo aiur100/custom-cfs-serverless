@@ -38,7 +38,10 @@ const Weather = () => {
                 return <Condition condition={icon} />
             })}
             <div class="col-lg-12">
-                <ConditionDetails weather={weatherResponse.weatherData?.main} />
+                <ConditionDetails 
+                    weather={weatherResponse.weatherData?.main} 
+                    detailed={weatherResponse.weatherData}
+                />
             </div>
         </div>
     )

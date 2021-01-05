@@ -1,6 +1,7 @@
 import React from 'react';
 
 const ConditionDetails = (props) => {
+    console.log(props);
     return (
         <div className="card">
             <div className="card-header">
@@ -27,6 +28,10 @@ const ConditionDetails = (props) => {
                     <tr>
                         <td><b>Humidity</b></td>
                         <td>{props.weather?.humidity}%</td>
+                    </tr>
+                    <tr>
+                        <td><b>Sky</b></td>
+                        <td>{props.detailed?.weather[0]?.description}</td>
                     </tr>
                 </table>
             </div>

@@ -13,6 +13,11 @@ This project is built on the `serverless` framework and we use AWS CloudFormatio
     * Create a new S3 Bucket set-up for static websites. 
     * Runs the `build.sh` file that is at the root of this project which runs the React build functions, and configs the react app to point to the API Gateway URL created.
     * Puts all the react build files on the S3 Bucket that is now a static website.
+* When running deployment that will update the project, the same lambda-backed cloudformation resource does the following - CF Update request type:
+  * If anything about the API itself (the name, is the only thing right now) has changed we re-create the API Gateway. 
+  * Or if the API doesn't exist, we create it. 
+  * If the bucket needed doesn't exist, we created it.  The bucket name is composed of the serverless service and the stage.  
+  * We run `build.sh` to build the react app, and deploy the code to the static S3 bucket. 
 
 ### Project structure
 * `./lambdas` - contains the lambda functions.
