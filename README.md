@@ -22,6 +22,6 @@ There are two short cuts that you need to use to start local development.  Each 
 
 # Current Todos
 * **DONE** - Test/POC deploying the Lambda-backed custom resource using serverless packaging that will include the spa as an artifact
-* Add S3 static site routines to Custom Resource Lambda. 
+* **DONE** Add S3 static site routines to Custom Resource Lambda. 
 * Add code that creates a .env file and adds it to the spa.  The .env file should add the variable for the AWS API Gateway URL that results.  
 * Add the code that runs the npm script for building the react app, which should add the environment variable's values to the project

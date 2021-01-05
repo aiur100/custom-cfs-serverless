@@ -56,12 +56,20 @@ module.exports.handler = async (event,context) => {
     }
 
     if(requestType === "Update" || requestType === "Create"){
-      const { s3Create } = require(".././utils/s3Create");
+      const { s3Create } = require("../utils/s3utils");
       const created = await s3Create(BucketName,AWS);
 
       if(created){
         console.info(`${BucketName} was created`);
       }
+      else{
+        console.info(`${BucketName} was not created because it already exists`);
+      }
+    }
+
+    if(requestType === "Update" || requestType === "Create"){
+      const { npmRunBuild } = require("../utils/npmRunBuild");
+      await npmRunBuild();
     }
     
     const responseData = { Value: currentApi.id };
