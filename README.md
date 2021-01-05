@@ -50,3 +50,5 @@ There are two short cuts that you need to use to start local development.  Each 
 * Look into react's testing framework and see if we can use that for some e2e/integration testing
 * Ensure that deletes and updates are handled in the custom resource stack
 * Update 
+* *Important* - Add outputs for the API url and the S3 website url. 
+* *Important* - Why am I not seeing a secure website with S3? 
