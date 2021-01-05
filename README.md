@@ -34,7 +34,7 @@ There are two short cuts that you need to use to start local development.  Each 
 ---
 
 ### Steps 
-* Run `sls deploy --stage <whatever-stage-you-want> --aws-profile <your-profile>`
+* Run `sls deploy --stage [prod|dev] --aws-profile <your-profile>`
   * If your using your default AWS profile, just omit the `--aws-profile` flag.
   * **Example:** `sls deploy --stage dev --aws-profile my-profile`
 
