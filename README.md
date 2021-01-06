@@ -55,7 +55,7 @@ This project is built on the `serverless` framework and we use AWS CloudFormatio
 * `./spa/.env` with `REACT_APP_API_URL=http://localhost:3000/local/` for local development
     * **IMPORTANT**: When deployed using the procedure described below, the value here is automatically generated and configured with the API Gateway execute URL. 
 
-## Local Developmnet 
+## Local Development 
 ---
 To develop locally and increase development speed, we use `serverless offline` to emulate API gateway locally, and React's own local development scripts. 
 
